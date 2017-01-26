@@ -9,7 +9,7 @@ static png_infop      s_info;
 static png_infop      s_end;
 static png_byte      *s_image     = NULL;;
 static png_bytep     *s_rows      = NULL;;
-static GLuint         s_tex       = 0;;
+GLuint                s_tex       = 0;;
 static int            s_width     = 0;
 static int            s_height    = 0;
 static int            s_rowbyte   = 0;
@@ -23,22 +23,22 @@ yGLTEX__png_open     (const char *a_filename)
    int         x_len       = 0;
    /*---(defense)------------------------*/
    --rce;  if (a_filename == NULL) {
-      printf("   - FATAL, filename is null\n");
+    URG_VERB     printf("   - FATAL, filename is null\n");
       return  rce;
    }
    x_len = strlen (a_filename);
    --rce;  if (x_len < 5) {
-      printf("   - FATAL, file name too short (%d < 5)\n", x_len);
+    URG_VERB     printf("   - FATAL, file name too short (%d < 5)\n", x_len);
       return  rce;
    }
-   printf ("   - file name : %s\n", a_filename);
+   URG_VERB   printf ("   - file name : %s\n", a_filename);
    /*---(open png file)------------------*/
    s_file = fopen (a_filename, "rb");
    --rce;  if (s_file == NULL) {
-      printf("   - FATAL, can not find file\n");
+      URG_VERB   printf("   - FATAL, can not find file\n");
       return rce;
    }
-   printf ("   - status    : confirmed and open for read-binary\n");
+   URG_VERB   printf ("   - status    : confirmed and open for read-binary\n");
    return 0;
 }
 
@@ -50,16 +50,16 @@ yGLTEX__png_close    (void)
    /*---(destroy pointers)---------------*/
    png_destroy_read_struct (&s_png, &s_info, &s_end);
    /*---(clear memory)-------------------*/
-   if (s_image != NULL) {
+   --rce;  if (s_image != NULL) {
       free     (s_image);
       s_image = NULL;
    }
-   if (s_rows  != NULL) {
+   --rce;  if (s_rows  != NULL) {
       free     (s_rows);
       s_rows  = NULL;
    }
    /*---(close file)---------------------*/
-   if (s_file  != NULL) {
+   --rce;  if (s_file  != NULL) {
       fclose   (s_file);
       s_file  = NULL;
    }
@@ -80,36 +80,34 @@ yGLTEX__png_header   (void)
    rc = png_sig_cmp (x_header, 0, 8);
    --rce;  if (rc != 0) {
       fclose(s_file);
-      printf("   - FATAL, header not png\n");
+      URG_VERB     printf("   - FATAL, header not png\n");
       return  rce;
    }
-   printf("   - header    : confirmed as png\n");
+   URG_VERB   printf("   - header    : confirmed as png\n");
    /*---(create read struct)-------------*/
    s_png = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
    --rce;  if (s_png == NULL) {
-      fclose(s_file);
-      printf("   - FATAL, s_png error\n");
-      return rce;
+      URG_VERB   printf("   - FATAL, s_png error\n");
+      yGLTEX__png_close  ();
+      return  rce;
    }
-   printf("   - pointer   : png pointer confirmed\n");
+   URG_VERB   printf("   - pointer   : png pointer confirmed\n");
    /*---(create info struct)-------------*/
    s_info = png_create_info_struct (s_png);
    --rce;  if (s_info == NULL) {
-      fclose(s_file);
-      png_destroy_read_struct (&s_png, (png_infopp) NULL, (png_infopp) NULL);
-      printf("   - FATAL, s_info error\n");
-      return rce;
+      URG_VERB   printf("   - FATAL, s_info error\n");
+      yGLTEX__png_close  ();
+      return  rce;
    }
-   printf("   - pointer   : info pointer confirmed\n");
+   URG_VERB   printf("   - pointer   : info pointer confirmed\n");
    /*---(create info struct)-------------*/
    s_end = png_create_info_struct (s_png);
-   if (s_end == NULL) {
-      fclose(s_file);
-      png_destroy_read_struct (&s_png, &s_info, (png_infopp) NULL);
-      printf("   - FATAL, end_ptr error\n");
-      return  -7;
+   --rce;  if (s_end == NULL) {
+      URG_VERB   printf("   - FATAL, end_ptr error\n");
+      yGLTEX__png_close  ();
+      return  rce;
    }
-   printf("   - pointer   : end pointer confirmed\n");
+   URG_VERB   printf("   - pointer   : end pointer confirmed\n");
    return 0;
 }
 
@@ -173,46 +171,42 @@ yGLTEX__png_read     (void)
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
    /*---(error stuff 2)------------------*/
-   if (setjmp(png_jmpbuf(s_png))) {
-      printf("   - FATAL, error during read image\n");
-      png_destroy_read_struct(&s_png, &s_info, &s_end);
-      fclose(s_file);
-      return 0;
+   --rce;  if (setjmp(png_jmpbuf(s_png))) {
+      URG_VERB   printf("   - FATAL, error during read image\n");
+      yGLTEX__png_close  ();
+      return  rce;
    }
-   printf("   - setjmp is good\n");
+   URG_VERB   printf("   - setjmp is good\n");
    /*---(allocate image)-----------------*/
-   png_byte *s_image = (unsigned char*) malloc(sizeof(png_byte) * s_rowbyte * s_height);
-   if (!s_image) {
-      fclose(s_file);
-      png_destroy_read_struct(&s_png, &s_info, &s_end);
-      printf("s_image error\n");
-      return 0;
+   s_image = (unsigned char*) malloc(sizeof(png_byte) * s_rowbyte * s_height);
+   --rce;  if (!s_image) {
+      URG_VERB   printf("s_image error\n");
+      yGLTEX__png_close  ();
+      return  rce;
    }
-   printf("   - image data is good\n");
+   URG_VERB   printf("   - image data is good\n");
    /*---(row pointers)-------------------*/
-   png_bytep *s_rows = (png_bytepp)  malloc(sizeof(png_bytep) * s_height);
-   if (s_rows == NULL) {
-      printf("s_rows error\n");
-      png_destroy_read_struct(&s_png, &s_info, &s_end);
-      free (s_image);
-      fclose(s_file);
-      return 0;
+   s_rows = (png_bytepp)  malloc(sizeof(png_bytep) * s_height);
+   --rce;  if (s_rows == NULL) {
+      URG_VERB   printf("s_rows error\n");
+      yGLTEX__png_close  ();
+      return  rce;
    }
-   printf("   - row pointers are good\n");
+   URG_VERB   printf("   - row pointers are good\n");
    uint i;
    for (i = 0; i < s_height; ++i) {
       s_rows[s_height - 1 - i] = s_image + (i * s_rowbyte);
    }
    /*---(read)---------------------------*/
-   printf("   - pre read_image\n");
-   png_read_image(s_png, s_rows);
-   printf("   - read_image was good\n");
+   URG_VERB   printf("   - pre read_image\n");
+   png_read_image (s_png, s_rows);
+   URG_VERB   printf("   - read_image was good\n");
    /*> unsigned char *bytey;                                                                  <* 
     *> for (i = 0; i < s_rowbyte; ++i) {                                               <* 
     *>    bytey = s_image + (50 * s_rowbyte) + i;                                   <* 
     *>    *bytey = 255;                                                               <* 
     *> }                                                                              <*/
-
+   return 0;
 }
 
 char               /* PURPOSE : make a png image into a texture --------------*/
@@ -220,17 +214,22 @@ yGLTEX__png_tex      (void)
 {
    /*---(make texture)-------------------*/
    glGenTextures   (1, &s_tex);
+   URG_VERB   printf("   - texture   : %d\n", s_tex);
    glBindTexture   (GL_TEXTURE_2D, s_tex);
+   URG_VERB   printf("   - bound\n");
    glTexParameteri (GL_TEXTURE_2D,  GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
    glTexParameteri (GL_TEXTURE_2D,  GL_TEXTURE_MAG_FILTER, GL_LINEAR);
    glTexParameterf (GL_TEXTURE_2D,  GL_TEXTURE_WRAP_S,     GL_REPEAT );
    glTexParameterf (GL_TEXTURE_2D,  GL_TEXTURE_WRAP_T,     GL_REPEAT );
    glTexParameteri (GL_TEXTURE_2D,  GL_GENERATE_MIPMAP,    GL_TRUE);
    glTexEnvi       (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,   GL_REPLACE);
+   URG_VERB   printf("   - set up attributes\n");
    /*> glHint          (GL_TEXTURE_COMPRESSION_HINT,           GL_NICEST);            <*/
    /*> glTexImage2D    (GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, twidth, theight, 0, GL_RGBA, GL_UNSIGNED_BYTE, s_image);   <*/
    glTexImage2D    (GL_TEXTURE_2D, 0, GL_RGBA, s_width, s_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, s_image);
+   URG_VERB   printf("   - drew image\n");
    glBindTexture (GL_TEXTURE_2D, 0);
+   URG_VERB   printf("   - unbound texture\n");
    /*---(clean)--------------------------*/
    return 0;
 }
@@ -242,7 +241,7 @@ yGLTEX_png2tex       (cchar *a_filename)
    char        rce         = -10;           /* return code for errors         */
    int         rc          = 0;             /* simple return code             */
    /*---(header)-------------------------*/
-   printf ("\nPNG_LOAD ()\n");
+   URG_VERB   printf ("\nPNG_LOAD ()\n");
    /*---(open png file)------------------*/
    if (rc == 0)  rc = yGLTEX__png_open     (a_filename);
    if (rc == 0)  rc = yGLTEX__png_header   ();
@@ -250,6 +249,7 @@ yGLTEX_png2tex       (cchar *a_filename)
    if (rc == 0)  rc = yGLTEX__png_read     ();
    if (rc == 0)  rc = yGLTEX__png_tex      ();
    yGLTEX__png_close    ();
+   URG_VERB   printf("   - texture   : %d\n", s_tex);
    /*---(complete)-----------------------*/
    return s_tex;
 }

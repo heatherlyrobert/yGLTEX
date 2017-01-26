@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YGLTEX_VER_NUM   "0.1b"
-#define     YGLTEX_VER_TXT   "moved working png code from tsae agent"
+#define     YGLTEX_VER_NUM   "0.1c"
+#define     YGLTEX_VER_TXT   "successfully working with tsae agent"
 
 
 
