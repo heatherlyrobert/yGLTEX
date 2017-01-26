@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YGLTEX_VER_NUM   "0.1a"
-#define     YGLTEX_VER_TXT   "created skeleton"
+#define     YGLTEX_VER_NUM   "0.1b"
+#define     YGLTEX_VER_TXT   "moved working png code from tsae agent"
 
 
 
