@@ -3,116 +3,56 @@
 #include "yGLTEX_priv.h"
 
 
-static FILE          *s_file      = NULL;
-static png_structp    s_png;
-static png_infop      s_info;
-static png_infop      s_end;
-static png_byte      *s_image     = NULL;;
-static png_bytep     *s_rows      = NULL;;
-GLuint                s_tex       = 0;;
-static int            s_width     = 0;
-static int            s_height    = 0;
-static int            s_rowbyte   = 0;
 
 
 char               /* PURPOSE : make a png image into a texture --------------*/
-yGLTEX__png_open     (const char *a_filename)
-{
-   /*---(locals)-----------+-----------+-*/
-   char        rce         = -10;           /* return code for errors         */
-   int         x_len       = 0;
-   /*---(defense)------------------------*/
-   --rce;  if (a_filename == NULL) {
-    URG_VERB     printf("   - FATAL, filename is null\n");
-      return  rce;
-   }
-   x_len = strlen (a_filename);
-   --rce;  if (x_len < 5) {
-    URG_VERB     printf("   - FATAL, file name too short (%d < 5)\n", x_len);
-      return  rce;
-   }
-   URG_VERB   printf ("   - file name : %s\n", a_filename);
-   /*---(open png file)------------------*/
-   s_file = fopen (a_filename, "rb");
-   --rce;  if (s_file == NULL) {
-      URG_VERB   printf("   - FATAL, can not find file\n");
-      return rce;
-   }
-   URG_VERB   printf ("   - status    : confirmed and open for read-binary\n");
-   return 0;
-}
-
-char               /* PURPOSE : make a png image into a texture --------------*/
-yGLTEX__png_close    (void)
-{
-   /*---(locals)-----------+-----------+-*/
-   char        rce         = -10;           /* return code for errors         */
-   /*---(destroy pointers)---------------*/
-   png_destroy_read_struct (&s_png, &s_info, &s_end);
-   /*---(clear memory)-------------------*/
-   --rce;  if (s_image != NULL) {
-      free     (s_image);
-      s_image = NULL;
-   }
-   --rce;  if (s_rows  != NULL) {
-      free     (s_rows);
-      s_rows  = NULL;
-   }
-   /*---(close file)---------------------*/
-   --rce;  if (s_file  != NULL) {
-      fclose   (s_file);
-      s_file  = NULL;
-   }
-   /*---(complete)-----------------------*/
-   return 0;
-}
-
-char               /* PURPOSE : make a png image into a texture --------------*/
-yGLTEX__png_header   (void)
+yGLTEX__read_header  (void)
 {
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
    int         rc          = 0;             /* simple return code             */
    int         x_len       = 0;
    png_byte    x_header    [8];             /* png header                     */
+   /*---(header)-------------------------*/
+   DEBUG_YGLTEX    yLOG_enter   (__FUNCTION__);
    /*---(check the header)---------------*/
+   DEBUG_YGLTEX    yLOG_note    ("read header (first 8 bytes)");
    fread (x_header, 1, 8, s_file);
    rc = png_sig_cmp (x_header, 0, 8);
+   DEBUG_YGLTEX    yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
-      fclose(s_file);
-      URG_VERB     printf("   - FATAL, header not png\n");
+      DEBUG_YGLTEX    yLOG_warn    ("header"   , "can not interpret header");
+      yGLTEX__file_close  ();
+      DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
    }
-   URG_VERB   printf("   - header    : confirmed as png\n");
    /*---(create read struct)-------------*/
+   DEBUG_YGLTEX    yLOG_note    ("creating png pointer (s_png)");
    s_png = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
+   DEBUG_YGLTEX    yLOG_point   ("s_png"     , s_png);
    --rce;  if (s_png == NULL) {
-      URG_VERB   printf("   - FATAL, s_png error\n");
-      yGLTEX__png_close  ();
+      DEBUG_YGLTEX    yLOG_warn    ("s_png"    , "can not get a write structure");
+      yGLTEX__file_close  ();
+      DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
    }
-   URG_VERB   printf("   - pointer   : png pointer confirmed\n");
    /*---(create info struct)-------------*/
+   DEBUG_YGLTEX    yLOG_note    ("creating info pointer (s_info)");
    s_info = png_create_info_struct (s_png);
+   DEBUG_YGLTEX    yLOG_point   ("s_info"    , s_info);
    --rce;  if (s_info == NULL) {
-      URG_VERB   printf("   - FATAL, s_info error\n");
-      yGLTEX__png_close  ();
+      DEBUG_YGLTEX    yLOG_warn    ("s_info"   , "can not get a info structure");
+      yGLTEX__file_close  ();
+      DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
    }
-   URG_VERB   printf("   - pointer   : info pointer confirmed\n");
-   /*---(create info struct)-------------*/
-   s_end = png_create_info_struct (s_png);
-   --rce;  if (s_end == NULL) {
-      URG_VERB   printf("   - FATAL, end_ptr error\n");
-      yGLTEX__png_close  ();
-      return  rce;
-   }
-   URG_VERB   printf("   - pointer   : end pointer confirmed\n");
+   /*---(complete)-----------------------*/
+   DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
 char               /* PURPOSE : make a png image into a texture --------------*/
-yGLTEX__png_attrib   (void)
+yGLTEX__read_attrib  (void)
 {
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
@@ -126,7 +66,7 @@ yGLTEX__png_attrib   (void)
    URG_VERB   printf ("(%d) ", rc);
    -rce;  if (rc <  0) {
       URG_VERB   printf ("FAILED, closing and exiting\n");
-      yGLTEX__png_close  ();
+      yGLTEX__file_close ();
       return  rce;
    }
    URG_VERB   printf ("confirmed\n");
@@ -147,7 +87,7 @@ yGLTEX__png_attrib   (void)
    png_read_update_info (s_png, s_info);
    --rce;  if (x_color  != PNG_COLOR_TYPE_RGBA) {
       URG_VERB   printf("   - FATAL, color is NOT RGBA\n");
-      yGLTEX__png_close  ();
+      yGLTEX__file_close ();
       return  rce;
    }
    URG_VERB   printf("   - color is RGBA, excellent\n");
@@ -166,14 +106,14 @@ yGLTEX__png_attrib   (void)
 }
 
 char               /* PURPOSE : make a png image into a texture --------------*/
-yGLTEX__png_read     (void)
+yGLTEX__read_image   (void)
 {
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
    /*---(error stuff 2)------------------*/
    --rce;  if (setjmp(png_jmpbuf(s_png))) {
       URG_VERB   printf("   - FATAL, error during read image\n");
-      yGLTEX__png_close  ();
+      yGLTEX__file_close ();
       return  rce;
    }
    URG_VERB   printf("   - setjmp is good\n");
@@ -181,7 +121,7 @@ yGLTEX__png_read     (void)
    s_image = (unsigned char*) malloc(sizeof(png_byte) * s_rowbyte * s_height);
    --rce;  if (!s_image) {
       URG_VERB   printf("s_image error\n");
-      yGLTEX__png_close  ();
+      yGLTEX__file_close ();
       return  rce;
    }
    URG_VERB   printf("   - image data is good\n");
@@ -189,11 +129,11 @@ yGLTEX__png_read     (void)
    s_rows = (png_bytepp)  malloc(sizeof(png_bytep) * s_height);
    --rce;  if (s_rows == NULL) {
       URG_VERB   printf("s_rows error\n");
-      yGLTEX__png_close  ();
+      yGLTEX__file_close ();
       return  rce;
    }
    URG_VERB   printf("   - row pointers are good\n");
-   uint i;
+   uint i, j;
    for (i = 0; i < s_height; ++i) {
       s_rows[s_height - 1 - i] = s_image + (i * s_rowbyte);
    }
@@ -201,16 +141,24 @@ yGLTEX__png_read     (void)
    URG_VERB   printf("   - pre read_image\n");
    png_read_image (s_png, s_rows);
    URG_VERB   printf("   - read_image was good\n");
-   /*> unsigned char *bytey;                                                                  <* 
-    *> for (i = 0; i < s_rowbyte; ++i) {                                               <* 
-    *>    bytey = s_image + (50 * s_rowbyte) + i;                                   <* 
-    *>    *bytey = 255;                                                               <* 
+   /*> unsigned char *bytey;                                                          <* 
+    *> for (i = 0; i < s_rowbyte; i += 4) {                                           <* 
+    *>    for (j = 0; j < s_height; j += 25) {                                        <* 
+    *>       bytey = s_image + (j * s_rowbyte) + i;                                   <* 
+    *>       *bytey =   0;                                                            <* 
+    *>       bytey = s_image + (j * s_rowbyte) + i + 1;                               <* 
+    *>       *bytey = 255;                                                            <* 
+    *>       bytey = s_image + (j * s_rowbyte) + i + 2;                               <* 
+    *>       *bytey =   0;                                                            <* 
+    *>       bytey = s_image + (j * s_rowbyte) + i + 3;                               <* 
+    *>       *bytey = 255;                                                            <* 
+    *>    }                                                                           <* 
     *> }                                                                              <*/
    return 0;
 }
 
 char               /* PURPOSE : make a png image into a texture --------------*/
-yGLTEX__png_tex      (void)
+yGLTEX__read_tex     (void)
 {
    /*---(make texture)-------------------*/
    glGenTextures   (1, &s_tex);
@@ -232,26 +180,6 @@ yGLTEX__png_tex      (void)
    URG_VERB   printf("   - unbound texture\n");
    /*---(clean)--------------------------*/
    return 0;
-}
-
-GLuint             /* PURPOSE : make a png image into a texture --------------*/
-yGLTEX_png2tex       (cchar *a_filename)
-{
-   /*---(locals)-----------+-----------+-*/
-   char        rce         = -10;           /* return code for errors         */
-   int         rc          = 0;             /* simple return code             */
-   /*---(header)-------------------------*/
-   URG_VERB   printf ("\nPNG_LOAD ()\n");
-   /*---(open png file)------------------*/
-   if (rc == 0)  rc = yGLTEX__png_open     (a_filename);
-   if (rc == 0)  rc = yGLTEX__png_header   ();
-   if (rc == 0)  rc = yGLTEX__png_attrib   ();
-   if (rc == 0)  rc = yGLTEX__png_read     ();
-   if (rc == 0)  rc = yGLTEX__png_tex      ();
-   yGLTEX__png_close    ();
-   URG_VERB   printf("   - texture   : %d\n", s_tex);
-   /*---(complete)-----------------------*/
-   return s_tex;
 }
 
 

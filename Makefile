@@ -35,8 +35,8 @@ LIBU    = ${LIBDIR}         -lX11             -lGL              -lm             
 #===(file lists)============================================================================================================================================================================#
 #------   (0)-------------- (1)-------------- (2)-------------- (3)-------------- (4)-------------- (5)-------------- (6)-------------- (7)-------------- (8)-------------- (9)-------------- (A)-------------- (B)-------------- (C)-------------- (D)-------------- (5)--------------
 HEADS   = ${BASE}.h         ${BASE}_priv.h
-OBJS    = ${BASE}_main.os   ${BASE}_png.os    ${BASE}_jpg.os
-OBJD    = ${BASE}_main.o    ${BASE}_png.o     ${BASE}_jpg.o   
+OBJS    = ${BASE}_main.os   ${BASE}_file.os   ${BASE}_read.os   ${BASE}_save.os
+OBJD    = ${BASE}_main.o    ${BASE}_file.o    ${BASE}_read.o    ${BASE}_save.o   
 OBJU    = ${BASE}_unit.o    ${OBJD}
 
 #===(make variables)====================================================================================================================================================#
@@ -73,15 +73,20 @@ ${BASE}_main.o     : ${HEADS}       ${BASE}_main.c
 	${STRIP}        ${BASE}_main.c      > ${BASE}_main.cs
 	${COMP}  -fPIC  ${BASE}_main.cs    -o ${BASE}_main.os    ${INC}
 
-${BASE}_png.o      : ${HEADS}       ${BASE}_png.c
-	${COMP}  -fPIC  ${BASE}_png.c                            ${INC}
-	${STRIP}        ${BASE}_png.c       > ${BASE}_png.cs
-	${COMP}  -fPIC  ${BASE}_png.cs     -o ${BASE}_png.os     ${INC}
+${BASE}_file.o     : ${HEADS}       ${BASE}_file.c
+	${COMP}  -fPIC  ${BASE}_file.c                           ${INC}
+	${STRIP}        ${BASE}_file.c      > ${BASE}_file.cs
+	${COMP}  -fPIC  ${BASE}_file.cs    -o ${BASE}_file.os    ${INC}
 
-${BASE}_jpg.o      : ${HEADS}       ${BASE}_jpg.c
-	${COMP}  -fPIC  ${BASE}_jpg.c                            ${INC}
-	${STRIP}        ${BASE}_jpg.c       > ${BASE}_jpg.cs
-	${COMP}  -fPIC  ${BASE}_jpg.cs     -o ${BASE}_jpg.os     ${INC}
+${BASE}_read.o     : ${HEADS}       ${BASE}_read.c
+	${COMP}  -fPIC  ${BASE}_read.c                           ${INC}
+	${STRIP}        ${BASE}_read.c      > ${BASE}_read.cs
+	${COMP}  -fPIC  ${BASE}_read.cs    -o ${BASE}_read.os    ${INC}
+
+${BASE}_save.o     : ${HEADS}       ${BASE}_save.c
+	${COMP}  -fPIC  ${BASE}_save.c                           ${INC}
+	${STRIP}        ${BASE}_save.c      > ${BASE}_save.cs
+	${COMP}  -fPIC  ${BASE}_save.cs    -o ${BASE}_save.os    ${INC}
 
 ${UNIT}.o          : ${HEADS} ${BASE}.unit
 	koios    ${BASE}

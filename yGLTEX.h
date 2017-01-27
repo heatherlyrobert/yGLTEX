@@ -19,13 +19,12 @@
 #include    <yLOG.h>         /* CUSTOM  heatherly program logging             */
 #include    <ySTR.h>         /* CUSTOM  heatherly string handling             */
 /*---(special)---------------------------*/
-#include    <jpeglib.h>      /* OTHER   JPEG image library                    */
 #include    <png.h>          /* OTHER   PNG image library                     */
 
 
 
 
-GLuint      yGLTEX_png2tex       (const char *a_filename);
+GLuint      yGLTEX_png2tex       (const char *a_name);
 
 
 #endif
