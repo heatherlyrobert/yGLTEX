@@ -6,10 +6,10 @@
 FILE          *s_file      = NULL;
 png_structp    s_png;
 png_infop      s_info;
-png_byte      *s_image     = NULL;;
-png_bytep     *s_rows      = NULL;;
 int            s_width     = 0;
 int            s_height    = 0;
+png_byte      *s_image     = NULL;;
+png_bytep     *s_rows      = NULL;;
 int            s_rowbyte   = 0;
 GLuint         s_tex       = 0;;
 
@@ -98,6 +98,33 @@ yGLTEX__file_close   (void)
    }
    /*---(complete)-----------------------*/
    DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yGLTEX__file_alloc   (void)
+{
+   /*---(locals)-----------+-----------+-*/
+   char        rce         = -10;           /* return code for errors         */
+   /*---(allocate image)-----------------*/
+   s_image = (unsigned char*) malloc (sizeof (png_byte) * s_rowbyte * s_height);
+   --rce;  if (!s_image) {
+      URG_VERB   printf("s_image error\n");
+      yGLTEX__file_close ();
+      return  rce;
+   }
+   /*---(row pointers)-------------------*/
+   s_rows = (png_bytepp)  malloc (sizeof (png_bytep) * s_height);
+   --rce;  if (s_rows == NULL) {
+      URG_VERB   printf("s_rows error\n");
+      yGLTEX__file_close ();
+      return  rce;
+   }
+   URG_VERB   printf("   - row pointers are good\n");
+   uint i, j;
+   for (i = 0; i < s_height; ++i) {
+      s_rows [s_height - 1 - i] = s_image + (i * s_rowbyte);
+   }
    return 0;
 }
 

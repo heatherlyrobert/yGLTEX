@@ -117,26 +117,26 @@ yGLTEX__read_image   (void)
       return  rce;
    }
    URG_VERB   printf("   - setjmp is good\n");
-   /*---(allocate image)-----------------*/
-   s_image = (unsigned char*) malloc(sizeof(png_byte) * s_rowbyte * s_height);
-   --rce;  if (!s_image) {
-      URG_VERB   printf("s_image error\n");
-      yGLTEX__file_close ();
-      return  rce;
-   }
-   URG_VERB   printf("   - image data is good\n");
+   /*> /+---(allocate image)-----------------+/                                       <* 
+    *> s_image = (unsigned char*) malloc(sizeof(png_byte) * s_rowbyte * s_height);    <* 
+    *> --rce;  if (!s_image) {                                                        <* 
+    *>    URG_VERB   printf("s_image error\n");                                       <* 
+    *>    yGLTEX__file_close ();                                                      <* 
+    *>    return  rce;                                                                <* 
+    *> }                                                                              <* 
+    *> URG_VERB   printf("   - image data is good\n");                                <*/
    /*---(row pointers)-------------------*/
-   s_rows = (png_bytepp)  malloc(sizeof(png_bytep) * s_height);
-   --rce;  if (s_rows == NULL) {
-      URG_VERB   printf("s_rows error\n");
-      yGLTEX__file_close ();
-      return  rce;
-   }
-   URG_VERB   printf("   - row pointers are good\n");
-   uint i, j;
-   for (i = 0; i < s_height; ++i) {
-      s_rows[s_height - 1 - i] = s_image + (i * s_rowbyte);
-   }
+   /*> s_rows = (png_bytepp)  malloc(sizeof(png_bytep) * s_height);                   <* 
+    *> --rce;  if (s_rows == NULL) {                                                  <* 
+    *>    URG_VERB   printf("s_rows error\n");                                        <* 
+    *>    yGLTEX__file_close ();                                                      <* 
+    *>    return  rce;                                                                <* 
+    *> }                                                                              <* 
+    *> URG_VERB   printf("   - row pointers are good\n");                             <* 
+    *> uint i, j;                                                                     <* 
+    *> for (i = 0; i < s_height; ++i) {                                               <* 
+    *>    s_rows[s_height - 1 - i] = s_image + (i * s_rowbyte);                       <* 
+    *> }                                                                              <*/
    /*---(read)---------------------------*/
    URG_VERB   printf("   - pre read_image\n");
    png_read_image (s_png, s_rows);

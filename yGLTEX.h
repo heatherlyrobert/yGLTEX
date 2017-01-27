@@ -25,6 +25,7 @@
 
 
 GLuint      yGLTEX_png2tex       (const char *a_name);
+char        yGLTEX_scr2png       (const char *a_name, int a_width, int a_height);
 
 
 #endif

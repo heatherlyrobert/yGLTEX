@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YGLTEX_VER_NUM   "0.1d"
-#define     YGLTEX_VER_TXT   "added save_header and debugging"
+#define     YGLTEX_VER_NUM   "0.1e"
+#define     YGLTEX_VER_TXT   "basic save works great, have a segfault at end/after"
 
 
 
@@ -42,6 +42,7 @@ extern      GLuint      s_tex;
 
 char        yGLTEX__file_open    (const char *a_name, const char a_mode);
 char        yGLTEX__file_close   (void);
+char        yGLTEX__file_alloc   (void);
 
 char        yGLTEX__read_header  (void);
 char        yGLTEX__read_attrib  (void);
@@ -49,7 +50,8 @@ char        yGLTEX__read_image   (void);
 char        yGLTEX__read_tex     (void);
 
 char        yGLTEX__save_header  (void);
-char        yGLTEX__save_attrib  (void);
+char        yGLTEX__save_attrib  (int a_width, int a_height);
+char        yGLTEX__save_image   (void);
 
 
 #endif
