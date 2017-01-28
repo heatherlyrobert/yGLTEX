@@ -58,6 +58,7 @@ yGLTEX__save_attrib  (int a_width, int a_height)
    /*---(header)-------------------------*/
    DEBUG_YGLTEX    yLOG_enter   (__FUNCTION__);
    /*---(set attributes)-----------------*/
+   DEBUG_YGLTEX    yLOG_note    ("save width, height, and rowbytes");
    s_width   = a_width;
    s_height  = a_height;
    s_rowbyte = s_width * 4;
@@ -72,6 +73,7 @@ yGLTEX__save_attrib  (int a_width, int a_height)
       return  rce;
    }
    /*---(write header)-------------------*/
+   DEBUG_YGLTEX    yLOG_note    ("write the attributes");
    png_set_IHDR (s_png, s_info, s_width, s_height,
          8, PNG_COLOR_TYPE_RGBA, PNG_INTERLACE_NONE,
          PNG_COMPRESSION_TYPE_BASE, PNG_FILTER_TYPE_BASE);
@@ -90,9 +92,12 @@ yGLTEX__save_image   (void)
    /*---(header)-------------------------*/
    DEBUG_YGLTEX    yLOG_enter   (__FUNCTION__);
    /*---(grab pixels)--------------------*/
+   DEBUG_YGLTEX    yLOG_note    ("read the pixels into s_image");
    glReadPixels (0, 0, s_width, s_height, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *) s_image);
    /*---(write image)--------------------*/
+   DEBUG_YGLTEX    yLOG_note    ("save the pixels into the file");
    png_write_image (s_png, s_rows);
+   DEBUG_YGLTEX    yLOG_note    ("write the fail ending");
    png_write_end   (s_png, s_info);
    /*---(complete)-----------------------*/
    DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);

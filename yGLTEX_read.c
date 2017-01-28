@@ -46,6 +46,16 @@ yGLTEX__read_header  (void)
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
    }
+   /*---(create end struct)--------------*/
+   DEBUG_YGLTEX    yLOG_note    ("creating end pointer (s_end)");
+   s_end = png_create_info_struct (s_png);
+   DEBUG_YGLTEX    yLOG_point   ("s_end"     , s_end);
+   --rce;  if (s_end == NULL) {
+      DEBUG_YGLTEX    yLOG_warn    ("s_end"    , "can not get a end structure");
+      yGLTEX__file_close  ();
+      DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
+      return  rce;
+   }
    /*---(complete)-----------------------*/
    DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
    return 0;
@@ -60,48 +70,54 @@ yGLTEX__read_attrib  (void)
    int         x_depth     = 0;
    int         x_color     = 0;
    int         x_channel   = 0;
-   /*---(error stuff 1)------------------*/
-   URG_VERB   printf ("   - set jump  : ");
+   /*---(header)-------------------------*/
+   DEBUG_YGLTEX    yLOG_enter   (__FUNCTION__);
+   /*---(error jump)---------------------*/
+   DEBUG_YGLTEX    yLOG_note    ("setting a jump buffer");
    rc = setjmp (png_jmpbuf (s_png));
-   URG_VERB   printf ("(%d) ", rc);
+   DEBUG_YGLTEX    yLOG_value   ("setjmp"    , rc);
    -rce;  if (rc <  0) {
-      URG_VERB   printf ("FAILED, closing and exiting\n");
+      DEBUG_YGLTEX    yLOG_warn    ("setjmp"   , "can not setjmp for header write");
       yGLTEX__file_close ();
+      DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
    }
-   URG_VERB   printf ("confirmed\n");
    /*---(setup read)---------------------*/
+   DEBUG_YGLTEX    yLOG_note    ("initiating io (png_init_io)");
    png_init_io          (s_png, s_file);
+   DEBUG_YGLTEX    yLOG_note    ("moving header information out of the way");
    png_set_sig_bytes    (s_png, 8);
    png_read_info        (s_png, s_info);
-   URG_VERB   printf ("   - set read  : complete\n");
    /*---(get info)-----------------------*/
    s_width      = png_get_image_width  (s_png, s_info);
-   URG_VERB   printf ("   - width     : %ld\n", s_width);
+   DEBUG_YGLTEX    yLOG_value   ("width"     , s_width);
    s_height     = png_get_image_height (s_png, s_info);
-   URG_VERB   printf ("   - height    : %ld\n", s_height);
+   DEBUG_YGLTEX    yLOG_value   ("height"    , s_height);
    x_color      = png_get_color_type   (s_png, s_info);
-   URG_VERB   printf ("   - color     : %ld\n", x_color);
+   DEBUG_YGLTEX    yLOG_value   ("color"     , x_color);
    x_depth      = png_get_bit_depth    (s_png, s_info);
-   URG_VERB   printf ("   - depth     : %ld\n", x_depth);
+   DEBUG_YGLTEX    yLOG_value   ("depth"     , x_depth);
+   DEBUG_YGLTEX    yLOG_note    ("read update");
    png_read_update_info (s_png, s_info);
    --rce;  if (x_color  != PNG_COLOR_TYPE_RGBA) {
-      URG_VERB   printf("   - FATAL, color is NOT RGBA\n");
+      DEBUG_YGLTEX    yLOG_warn    ("x_color"  , "image is not RGBA");
       yGLTEX__file_close ();
+      DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
    }
-   URG_VERB   printf("   - color is RGBA, excellent\n");
    s_rowbyte = png_get_rowbytes (s_png, s_info);
-   URG_VERB   printf ("   - rowbytes  : %ld\n", s_rowbyte);
+   DEBUG_YGLTEX    yLOG_value   ("rowbytes"  , s_rowbyte);
    x_channel = png_get_channels (s_png, s_info);
-   URG_VERB   printf ("   - channels  : %ld\n", x_channel);
+   DEBUG_YGLTEX    yLOG_value   ("channels"  , x_channel);
    /*---(transform)----------------------*/
+   DEBUG_YGLTEX    yLOG_note    ("check pallette");
    if (x_color == PNG_COLOR_TYPE_PALETTE)
       png_set_palette_to_rgb (s_png);        /* makes rgb                      */
+   DEBUG_YGLTEX    yLOG_note    ("check alpha");
    if (png_get_valid (s_png, s_info, PNG_INFO_tRNS))
       png_set_tRNS_to_alpha  (s_png);        /* expands out alpha              */
-   URG_VERB   printf("   - palette and alpha are good\n");
    /*---(complete)-----------------------*/
+   DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
@@ -110,75 +126,52 @@ yGLTEX__read_image   (void)
 {
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
-   /*---(error stuff 2)------------------*/
-   --rce;  if (setjmp(png_jmpbuf(s_png))) {
-      URG_VERB   printf("   - FATAL, error during read image\n");
+   char        rc          =   0;
+   /*---(header)-------------------------*/
+   DEBUG_YGLTEX    yLOG_enter   (__FUNCTION__);
+   /*---(error jump)---------------------*/
+   DEBUG_YGLTEX    yLOG_note    ("setting a jump buffer");
+   rc = setjmp (png_jmpbuf (s_png));
+   DEBUG_YGLTEX    yLOG_value   ("setjmp"    , rc);
+   -rce;  if (rc <  0) {
+      DEBUG_YGLTEX    yLOG_warn    ("setjmp"   , "can not setjmp for header write");
       yGLTEX__file_close ();
+      DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
    }
-   URG_VERB   printf("   - setjmp is good\n");
-   /*> /+---(allocate image)-----------------+/                                       <* 
-    *> s_image = (unsigned char*) malloc(sizeof(png_byte) * s_rowbyte * s_height);    <* 
-    *> --rce;  if (!s_image) {                                                        <* 
-    *>    URG_VERB   printf("s_image error\n");                                       <* 
-    *>    yGLTEX__file_close ();                                                      <* 
-    *>    return  rce;                                                                <* 
-    *> }                                                                              <* 
-    *> URG_VERB   printf("   - image data is good\n");                                <*/
-   /*---(row pointers)-------------------*/
-   /*> s_rows = (png_bytepp)  malloc(sizeof(png_bytep) * s_height);                   <* 
-    *> --rce;  if (s_rows == NULL) {                                                  <* 
-    *>    URG_VERB   printf("s_rows error\n");                                        <* 
-    *>    yGLTEX__file_close ();                                                      <* 
-    *>    return  rce;                                                                <* 
-    *> }                                                                              <* 
-    *> URG_VERB   printf("   - row pointers are good\n");                             <* 
-    *> uint i, j;                                                                     <* 
-    *> for (i = 0; i < s_height; ++i) {                                               <* 
-    *>    s_rows[s_height - 1 - i] = s_image + (i * s_rowbyte);                       <* 
-    *> }                                                                              <*/
    /*---(read)---------------------------*/
-   URG_VERB   printf("   - pre read_image\n");
+   DEBUG_YGLTEX    yLOG_note    ("read image data");
    png_read_image (s_png, s_rows);
-   URG_VERB   printf("   - read_image was good\n");
-   /*> unsigned char *bytey;                                                          <* 
-    *> for (i = 0; i < s_rowbyte; i += 4) {                                           <* 
-    *>    for (j = 0; j < s_height; j += 25) {                                        <* 
-    *>       bytey = s_image + (j * s_rowbyte) + i;                                   <* 
-    *>       *bytey =   0;                                                            <* 
-    *>       bytey = s_image + (j * s_rowbyte) + i + 1;                               <* 
-    *>       *bytey = 255;                                                            <* 
-    *>       bytey = s_image + (j * s_rowbyte) + i + 2;                               <* 
-    *>       *bytey =   0;                                                            <* 
-    *>       bytey = s_image + (j * s_rowbyte) + i + 3;                               <* 
-    *>       *bytey = 255;                                                            <* 
-    *>    }                                                                           <* 
-    *> }                                                                              <*/
+   /*---(complete)-----------------------*/
+   DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
 char               /* PURPOSE : make a png image into a texture --------------*/
 yGLTEX__read_tex     (void)
 {
+   /*---(header)-------------------------*/
+   DEBUG_YGLTEX    yLOG_enter   (__FUNCTION__);
    /*---(make texture)-------------------*/
    glGenTextures   (1, &s_tex);
-   URG_VERB   printf("   - texture   : %d\n", s_tex);
+   DEBUG_YGLTEX    yLOG_value   ("s_tex"     , s_tex);
+   DEBUG_YGLTEX    yLOG_note    ("binding texture");
    glBindTexture   (GL_TEXTURE_2D, s_tex);
-   URG_VERB   printf("   - bound\n");
+   DEBUG_YGLTEX    yLOG_note    ("set attributes");
    glTexParameteri (GL_TEXTURE_2D,  GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
    glTexParameteri (GL_TEXTURE_2D,  GL_TEXTURE_MAG_FILTER, GL_LINEAR);
    glTexParameterf (GL_TEXTURE_2D,  GL_TEXTURE_WRAP_S,     GL_REPEAT );
    glTexParameterf (GL_TEXTURE_2D,  GL_TEXTURE_WRAP_T,     GL_REPEAT );
    glTexParameteri (GL_TEXTURE_2D,  GL_GENERATE_MIPMAP,    GL_TRUE);
    glTexEnvi       (GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,   GL_REPLACE);
-   URG_VERB   printf("   - set up attributes\n");
    /*> glHint          (GL_TEXTURE_COMPRESSION_HINT,           GL_NICEST);            <*/
    /*> glTexImage2D    (GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA, twidth, theight, 0, GL_RGBA, GL_UNSIGNED_BYTE, s_image);   <*/
+   DEBUG_YGLTEX    yLOG_note    ("copy image to tex using glTexImage2D");
    glTexImage2D    (GL_TEXTURE_2D, 0, GL_RGBA, s_width, s_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, s_image);
-   URG_VERB   printf("   - drew image\n");
+   DEBUG_YGLTEX    yLOG_note    ("unbinding texture");
    glBindTexture (GL_TEXTURE_2D, 0);
-   URG_VERB   printf("   - unbound texture\n");
-   /*---(clean)--------------------------*/
+   /*---(complete)-----------------------*/
+   DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
    return 0;
 }
 
