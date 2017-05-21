@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YGLTEX_VER_NUM   "0.1f"
-#define     YGLTEX_VER_TXT   "debug mode issues and save mode now work great"
+#define     YGLTEX_VER_NUM   "0.2b"
+#define     YGLTEX_VER_TXT   "added texture new, start, end, and free functions"
 
 
 
@@ -41,7 +41,7 @@ extern      GLuint      s_tex;
 
 
 
-char        yGLTEX__file_open    (const char *a_name, const char a_mode);
+char        yGLTEX__file_open    (cchar *a_name, cchar a_mode);
 char        yGLTEX__file_close   (void);
 char        yGLTEX__file_alloc   (void);
 
@@ -51,7 +51,7 @@ char        yGLTEX__read_image   (void);
 char        yGLTEX__read_tex     (void);
 
 char        yGLTEX__save_header  (void);
-char        yGLTEX__save_attrib  (int a_width, int a_height);
+char        yGLTEX__save_attrib  (cint a_width, cint a_height);
 char        yGLTEX__save_image   (void);
 
 

@@ -17,7 +17,7 @@ png_bytep     *s_rows;
 
 
 char               /* PURPOSE : make a png image into a texture --------------*/
-yGLTEX__file_open    (const char *a_name, const char a_mode)
+yGLTEX__file_open    (cchar *a_name, cchar a_mode)
 {
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */

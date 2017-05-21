@@ -50,7 +50,7 @@ yGLTEX__save_header  (void)
 }
 
 char
-yGLTEX__save_attrib  (int a_width, int a_height)
+yGLTEX__save_attrib  (cint a_width, cint a_height)
 {
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
