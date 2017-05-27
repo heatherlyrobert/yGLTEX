@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YGLTEX_VER_NUM   "0.2b"
-#define     YGLTEX_VER_TXT   "added texture new, start, end, and free functions"
+#define     YGLTEX_VER_NUM   "0.2c"
+#define     YGLTEX_VER_TXT   "moved to make_program makefile enhancement"
 
 
 
