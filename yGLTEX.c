@@ -3,6 +3,32 @@
 #include "yGLTEX_priv.h"
 
 
+
+/*====================------------------------------------====================*/
+/*===----                           utility                            ----===*/
+/*====================------------------------------------====================*/
+static void      o___UTILITY_________________o (void) {;}
+
+char        yGLTEX_ver     [500];
+
+char*      /* ---- : return library versioning information -------------------*/
+yGLTEX_version       (void)
+{
+   char    t [20] = "";
+#if    __TINYC__ > 0
+   strlcpy (t, "[tcc built  ]", 15);
+#elif  __GNUC__  > 0
+   strlcpy (t, "[gnu gcc    ]", 15);
+#elif  __HEPH__  > 0
+   strncpy (t, "[hephaestus ]", 15);
+#else
+   strlcpy (t, "[unknown    ]", 15);
+#endif
+   snprintf (yGLTEX_ver, 100, "%s   %s : %s", t, YGLTEX_VER_NUM, YGLTEX_VER_TXT);
+   return yGLTEX_ver;
+}
+
+
 char         /*--> create a new texture ------------------[ leaf-- [ ------ ]-*/
 yGLTEX_new         (uint *a_tex, uint *a_fbo, uint *a_depth, cint a_wide, cint a_tall)
 {

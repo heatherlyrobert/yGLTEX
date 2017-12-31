@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YGLTEX_VER_NUM   "0.2c"
-#define     YGLTEX_VER_TXT   "moved to make_program makefile enhancement"
+#define     YGLTEX_VER_NUM   "0.2d"
+#define     YGLTEX_VER_TXT   "added version function for debugging"
 
 
 

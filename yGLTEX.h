@@ -42,6 +42,7 @@ typedef     unsigned int        uint;
 typedef     const unsigned int  cuint;
 
 
+char*       yGLTEX_version       (void);
 
 char        yGLTEX_new           (uint  *a_tex , uint  *a_fbo  , uint *a_depth, cint a_wide, cint a_tall);
 char        yGLTEX_free          (uint  *a_tex , uint  *a_fbo  , uint *a_depth);
