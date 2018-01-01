@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YGLTEX_VER_NUM   "0.2d"
-#define     YGLTEX_VER_TXT   "added version function for debugging"
+#define     YGLTEX_VER_NUM   "0.3a"
+#define     YGLTEX_VER_TXT   "added init and updated start for gregg shorthand"
 
 
 

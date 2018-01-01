@@ -35,19 +35,22 @@
 #define     YGLTEX_BOTCEN    8
 #define     YGLTEX_BOTRIG    9
 
+#define     YGLTEX_GREGG     10
 
 
 typedef     const char          cchar;
 typedef     unsigned int        uint;
 typedef     const unsigned int  cuint;
+typedef     const float         cfloat;
 
 
 char*       yGLTEX_version       (void);
+char        yGLTEX_init          (void);
 
 char        yGLTEX_new           (uint  *a_tex , uint  *a_fbo  , uint *a_depth, cint a_wide, cint a_tall);
 char        yGLTEX_free          (uint  *a_tex , uint  *a_fbo  , uint *a_depth);
 
-char        yGLTEX_draw_start    (cuint  a_fbo , cchar  a_pos  , cint  a_wide , cint a_tall);
+char        yGLTEX_draw_start    (cuint  a_fbo , cchar  a_pos  , cint  a_wide , cint a_tall, cfloat a_scale);
 char        yGLTEX_draw_end      (cuint  a_tex );
 
 GLuint      yGLTEX_png2tex       (cchar *a_name);

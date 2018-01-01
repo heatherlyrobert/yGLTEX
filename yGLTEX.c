@@ -28,6 +28,43 @@ yGLTEX_version       (void)
    return yGLTEX_ver;
 }
 
+char
+yGLTEX_init          (void)
+{
+   /*---(header)-------------------------*/
+   DEBUG_YGLTEX    yLOG_senter  (__FUNCTION__);
+   /*---(color)--------------------------*/
+   DEBUG_YGLTEX    yLOG_snote   ("color");
+   glClearColor    (0.50f, 0.50f, 0.50f, 1.00f);
+   glClearDepth    (1.00f);
+   /*---(textures)-----------------------*/
+   DEBUG_YGLTEX    yLOG_snote   ("texture");
+   glShadeModel    (GL_SMOOTH);
+   glEnable        (GL_TEXTURE_2D);    /* NEW */
+   /*---(blending)-----------------------*/
+   DEBUG_YGLTEX    yLOG_snote   ("blending");
+   glEnable        (GL_DEPTH_TEST);
+   glEnable        (GL_ALPHA_TEST);
+   glEnable        (GL_BLEND);
+   glAlphaFunc     (GL_GEQUAL, 0.0125);
+   glBlendFunc     (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   /*---(anti-aliasing)------------------*/
+   DEBUG_YGLTEX    yLOG_snote   ("antialias" );
+   glHint          (GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+   glPolygonMode   (GL_FRONT_AND_BACK, GL_FILL);
+   glEnable        (GL_POLYGON_SMOOTH);
+   glHint          (GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+   /*---(simple defaulting)--------------*/
+   DEBUG_YGLTEX    yLOG_snote   ("defaults" );
+   glLineWidth     (0.50f);
+   glPointSize     (2.00f);
+   /*---(flush)--------------------------*/
+   DEBUG_YGLTEX    yLOG_snote   ("flush" );
+   glFlush         ();
+   /*---(complete)-----------------------*/
+   DEBUG_YGLTEX    yLOG_sexit   (__FUNCTION__);
+   return 0;
+}
 
 char         /*--> create a new texture ------------------[ leaf-- [ ------ ]-*/
 yGLTEX_new         (uint *a_tex, uint *a_fbo, uint *a_depth, cint a_wide, cint a_tall)
@@ -110,28 +147,37 @@ yGLTEX_free        (uint *a_tex, uint *a_fbo, uint *a_depth)
 }
 
 char         /*--> set-up drawing window -----------------[ ------ [ ------ ]-*/
-yGLTEX_draw_start  (cuint a_fbo, cchar a_pos, cint a_wide, cint a_tall)
+yGLTEX_draw_start  (cuint a_fbo, cchar a_pos, cint a_wide, cint a_tall, cfloat a_scale)
 {
    /*---(locals)-----------+-----------+-*/
-   float     x_top         = 0.0;
-   float     x_bot         = 0.0;
-   float     x_lef         = 0.0;
-   float     x_rig         = 0.0;
+   float     x_wide        =  0.0;
+   float     x_tall        =  0.0;
+   float     x_top         =  0.0;
+   float     x_bot         =  0.0;
+   float     x_lef         =  0.0;
+   float     x_rig         =  0.0;
    /*---(header)-------------------------*/
    DEBUG_YGLTEX    yLOG_enter   (__FUNCTION__);
    DEBUG_YGLTEX    yLOG_value   ("a_pos"     , a_pos);
+   /*---(scaling)------------------------*/
+   x_wide    = a_wide / a_scale;
+   x_tall    = a_tall / a_scale;
    /*---(vertical setup)-----------------*/
    switch (a_pos) {
+   case  YGLTEX_GREGG  :
+      x_top =  125.0;
+      x_bot = x_top - x_tall;
+      break;
    case  YGLTEX_TOPLEF : case  YGLTEX_TOPCEN : case  YGLTEX_TOPRIG :
       x_top =   0.0;
-      x_bot = -(a_tall);
+      x_bot = -(x_tall);
       break;
    case  YGLTEX_MIDLEF : case  YGLTEX_MIDRIG : case  YGLTEX_MIDCEN :
-      x_top =  (a_tall / 2.0);
-      x_bot = -(a_tall / 2.0);
+      x_top =  (x_tall / 2.0);
+      x_bot = -(x_tall / 2.0);
       break;
    case  YGLTEX_BOTLEF : case  YGLTEX_BOTCEN : case  YGLTEX_BOTRIG : default :
-      x_top =  (a_tall);
+      x_top =  (x_tall);
       x_bot =   0.0;
       break;
    }
@@ -139,16 +185,20 @@ yGLTEX_draw_start  (cuint a_fbo, cchar a_pos, cint a_wide, cint a_tall)
    DEBUG_YGLTEX    yLOG_value   ("x_bot"     , x_bot);
    /*---(setup)--------------------------*/
    switch (a_pos) {
+   case  YGLTEX_GREGG  :
+      x_lef = -125.0;
+      x_rig = x_lef + x_wide;
+      break;
    case  YGLTEX_TOPRIG : case  YGLTEX_MIDRIG : case  YGLTEX_BOTRIG :
       x_rig =   0.0;
-      x_lef = -(a_wide);
+      x_lef = -(x_wide);
       break;
    case  YGLTEX_TOPCEN : case  YGLTEX_MIDCEN : case  YGLTEX_BOTCEN :
-      x_rig =  (a_wide / 2.0);
-      x_lef = -(a_wide / 2.0);
+      x_rig =  (x_wide / 2.0);
+      x_lef = -(x_wide / 2.0);
       break;
    case  YGLTEX_TOPLEF : case  YGLTEX_MIDLEF : case  YGLTEX_BOTLEF : default :
-      x_rig =  (a_wide);
+      x_rig =  (x_wide);
       x_lef =   0.0;
       break;
    }
