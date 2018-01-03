@@ -257,6 +257,8 @@ yGLTEX_png2tex       (cchar *a_name)
    if (rc == 0)  rc = yGLTEX__read_image   ();
    if (rc == 0)  rc = yGLTEX__read_tex     ();
    yGLTEX__file_close    ();
+   DEBUG_YGLTEX    yLOG_value   ("rc"        , rc);
+   if (rc < 0) return rc;
    DEBUG_YGLTEX    yLOG_value   ("s_tex"     , s_tex);
    /*---(complete)-----------------------*/
    DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);

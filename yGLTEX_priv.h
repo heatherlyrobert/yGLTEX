@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YGLTEX_VER_NUM   "0.3a"
-#define     YGLTEX_VER_TXT   "added init and updated start for gregg shorthand"
+#define     YGLTEX_VER_NUM   "0.3b"
+#define     YGLTEX_VER_TXT   "slight mods to help yFONT load my icon set for gregg"
 
 
 
