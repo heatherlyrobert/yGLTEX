@@ -241,6 +241,14 @@ yGLTEX_draw_end    (cuint a_tex)
    return 0;
 }
 
+char
+yGLTEX_get_size      (int *a_wide, int *a_tall)
+{
+   if (a_wide != NULL)  *a_wide = s_width;
+   if (a_tall != NULL)  *a_tall = s_height;
+   return 0;
+}
+
 GLuint             /* PURPOSE : make a png image into a texture --------------*/
 yGLTEX_png2tex       (cchar *a_name)
 {

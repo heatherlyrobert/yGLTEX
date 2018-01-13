@@ -56,6 +56,8 @@ char        yGLTEX_draw_end      (cuint  a_tex );
 GLuint      yGLTEX_png2tex       (cchar *a_name);
 char        yGLTEX_scr2png       (cchar *a_name, cint   a_width, cint  a_height);
 
+char        yGLTEX_get_size      (int *a_wide, int *a_tall);
+
 
 #endif
 
