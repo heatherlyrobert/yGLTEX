@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YGLTEX_VER_NUM   "0.3c"
-#define     YGLTEX_VER_TXT   "more small fixes for apelles"
+#define     YGLTEX_VER_NUM   "0.3d"
+#define     YGLTEX_VER_TXT   "can now save a texture as a png"
 
 
 
@@ -52,7 +52,7 @@ char        yGLTEX__read_tex     (void);
 
 char        yGLTEX__save_header  (void);
 char        yGLTEX__save_attrib  (cint a_width, cint a_height);
-char        yGLTEX__save_image   (void);
+char        yGLTEX__save_image   (cchar a_source);
 
 
 #endif

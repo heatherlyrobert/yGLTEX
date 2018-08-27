@@ -84,7 +84,7 @@ yGLTEX__save_attrib  (cint a_width, cint a_height)
 }
 
 char
-yGLTEX__save_image   (void)
+yGLTEX__save_image   (cchar a_source)
 {
    /*---(locals)-----------+-----------+-*/
    char        rce         = -10;           /* return code for errors         */
@@ -93,7 +93,22 @@ yGLTEX__save_image   (void)
    DEBUG_YGLTEX    yLOG_enter   (__FUNCTION__);
    /*---(grab pixels)--------------------*/
    DEBUG_YGLTEX    yLOG_note    ("read the pixels into s_image");
-   glReadPixels (0, 0, s_width, s_height, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *) s_image);
+   --rce;
+   switch (a_source) {
+   case 'w' :
+      DEBUG_YGLTEX    yLOG_note    ("copying from window");
+      glReadPixels  (0, 0, s_width, s_height, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *) s_image);
+      break;
+   case 't' :
+      DEBUG_YGLTEX    yLOG_note    ("copying from texture");
+      glCopyTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, s_width, s_height, 0);
+      glGetTexImage    (GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *) s_image);
+      break;
+   default  : 
+      DEBUG_YGLTEX    yLOG_note    ("unknown type");
+      DEBUG_YGLTEX    yLOG_exitr   (__FUNCTION__, rce);
+      return rce;
+   }
    /*---(write image)--------------------*/
    DEBUG_YGLTEX    yLOG_note    ("save the pixels into the file");
    png_write_image (s_png, s_rows);

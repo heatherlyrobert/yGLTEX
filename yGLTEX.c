@@ -183,7 +183,7 @@ yGLTEX_draw_start  (cuint a_fbo, cchar a_pos, cint a_wide, cint a_tall, cfloat a
    }
    DEBUG_YGLTEX    yLOG_value   ("x_top"     , x_top);
    DEBUG_YGLTEX    yLOG_value   ("x_bot"     , x_bot);
-   /*---(setup)--------------------------*/
+   /*---(horizontal setup)---------------*/
    switch (a_pos) {
    case  YGLTEX_GREGG  :
       x_lef = -125.0;
@@ -286,7 +286,27 @@ yGLTEX_scr2png       (cchar *a_name, cint a_width, cint a_height)
    if (rc == 0)  rc = yGLTEX__save_header  ();
    if (rc == 0)  rc = yGLTEX__save_attrib  (a_width, a_height);
    if (rc == 0)  rc = yGLTEX__file_alloc   ();
-   if (rc == 0)  rc = yGLTEX__save_image   ();
+   if (rc == 0)  rc = yGLTEX__save_image   ('w');
+   yGLTEX__file_close    ();
+   /*---(complete)-----------------------*/
+   DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
+   return 0;
+}
+
+char
+yGLTEX_tex2png       (cchar *a_name, cint a_width, cint a_height)
+{
+   /*---(locals)-----------+-----------+-*/
+   char        rce         = -10;           /* return code for errors         */
+   int         rc          = 0;             /* simple return code             */
+   /*---(header)-------------------------*/
+   DEBUG_YGLTEX    yLOG_enter   (__FUNCTION__);
+   /*---(open png file)------------------*/
+   if (rc == 0)  rc = yGLTEX__file_open    (a_name, 'w');
+   if (rc == 0)  rc = yGLTEX__save_header  ();
+   if (rc == 0)  rc = yGLTEX__save_attrib  (a_width, a_height);
+   if (rc == 0)  rc = yGLTEX__file_alloc   ();
+   if (rc == 0)  rc = yGLTEX__save_image   ('t');
    yGLTEX__file_close    ();
    /*---(complete)-----------------------*/
    DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
