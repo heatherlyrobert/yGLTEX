@@ -21,7 +21,7 @@ yGLTEX__read_header  (void)
    rc = png_sig_cmp (x_header, 0, 8);
    DEBUG_YGLTEX    yLOG_value   ("rc"        , rc);
    --rce;  if (rc != 0) {
-      DEBUG_YGLTEX    yLOG_warn    ("header"   , "can not interpret header");
+      DEBUG_YGLTEX    yLOG_warn    ("header can not interpret header");
       yGLTEX__file_close  ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
@@ -31,7 +31,7 @@ yGLTEX__read_header  (void)
    s_png = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
    DEBUG_YGLTEX    yLOG_point   ("s_png"     , s_png);
    --rce;  if (s_png == NULL) {
-      DEBUG_YGLTEX    yLOG_warn    ("s_png"    , "can not get a write structure");
+      DEBUG_YGLTEX    yLOG_warn    ("s_png can not get a write structure");
       yGLTEX__file_close  ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
@@ -41,7 +41,7 @@ yGLTEX__read_header  (void)
    s_info = png_create_info_struct (s_png);
    DEBUG_YGLTEX    yLOG_point   ("s_info"    , s_info);
    --rce;  if (s_info == NULL) {
-      DEBUG_YGLTEX    yLOG_warn    ("s_info"   , "can not get a info structure");
+      DEBUG_YGLTEX    yLOG_warn    ("s_info can not get a info structure");
       yGLTEX__file_close  ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
@@ -51,7 +51,7 @@ yGLTEX__read_header  (void)
    s_end = png_create_info_struct (s_png);
    DEBUG_YGLTEX    yLOG_point   ("s_end"     , s_end);
    --rce;  if (s_end == NULL) {
-      DEBUG_YGLTEX    yLOG_warn    ("s_end"    , "can not get a end structure");
+      DEBUG_YGLTEX    yLOG_warn    ("s_end can not get a end structure");
       yGLTEX__file_close  ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
@@ -77,7 +77,7 @@ yGLTEX__read_attrib  (void)
    rc = setjmp (png_jmpbuf (s_png));
    DEBUG_YGLTEX    yLOG_value   ("setjmp"    , rc);
    -rce;  if (rc <  0) {
-      DEBUG_YGLTEX    yLOG_warn    ("setjmp"   , "can not setjmp for header write");
+      DEBUG_YGLTEX    yLOG_warn    ("setjmp can not setjmp for header write");
       yGLTEX__file_close ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
@@ -100,7 +100,7 @@ yGLTEX__read_attrib  (void)
    DEBUG_YGLTEX    yLOG_note    ("read update");
    png_read_update_info (s_png, s_info);
    --rce;  if (x_color  != PNG_COLOR_TYPE_RGBA) {
-      DEBUG_YGLTEX    yLOG_warn    ("x_color"  , "image is not RGBA");
+      DEBUG_YGLTEX    yLOG_warn    ("x_color image is not RGBA");
       yGLTEX__file_close ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
@@ -134,7 +134,7 @@ yGLTEX__read_image   (void)
    rc = setjmp (png_jmpbuf (s_png));
    DEBUG_YGLTEX    yLOG_value   ("setjmp"    , rc);
    -rce;  if (rc <  0) {
-      DEBUG_YGLTEX    yLOG_warn    ("setjmp"   , "can not setjmp for header write");
+      DEBUG_YGLTEX    yLOG_warn    ("setjmp can not setjmp for header write");
       yGLTEX__file_close ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;

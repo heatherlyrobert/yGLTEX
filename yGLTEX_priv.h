@@ -8,8 +8,8 @@
 
 
 /* rapidly evolving version number to aid with visual change confirmation     */
-#define     YGLTEX_VER_NUM   "0.3d"
-#define     YGLTEX_VER_TXT   "can now save a texture as a png"
+#define     P_VERNUM    "0.3d"
+#define     P_VERTXT    "can now save a texture as a png"
 
 
 

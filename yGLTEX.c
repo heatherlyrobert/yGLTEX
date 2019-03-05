@@ -24,7 +24,7 @@ yGLTEX_version       (void)
 #else
    strlcpy (t, "[unknown    ]", 15);
 #endif
-   snprintf (yGLTEX_ver, 100, "%s   %s : %s", t, YGLTEX_VER_NUM, YGLTEX_VER_TXT);
+   snprintf (yGLTEX_ver, 100, "%s   %s : %s", t, P_VERNUM, P_VERTXT);
    return yGLTEX_ver;
 }
 

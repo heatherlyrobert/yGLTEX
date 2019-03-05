@@ -27,14 +27,14 @@ yGLTEX__file_open    (cchar *a_name, cchar a_mode)
    /*---(defense)------------------------*/
    DEBUG_YGLTEX    yLOG_point   ("a_name"    , a_name);
    --rce;  if (a_name == NULL) {
-      DEBUG_YGLTEX    yLOG_warn    ("a_name"   , "texture name can not be null");
+      DEBUG_YGLTEX    yLOG_warn    ("a_name texture name can not be null");
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
    }
    x_len = strlen (a_name);
    DEBUG_YGLTEX    yLOG_point   ("x_len"     , x_len);
    --rce;  if (x_len < 5) {
-      DEBUG_YGLTEX    yLOG_warn    ("a_name"   , "texture name is too short ( < 5 chars)");
+      DEBUG_YGLTEX    yLOG_warn    ("a_name texture name is too short ( < 5 chars)");
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
    }
@@ -51,7 +51,7 @@ yGLTEX__file_open    (cchar *a_name, cchar a_mode)
       s_file = fopen (a_name, "wb");
       break;
    default  :
-      DEBUG_YGLTEX    yLOG_warn    ("a_mode"   , "open mode must be 'r' or 'w'");
+      DEBUG_YGLTEX    yLOG_warn    ("a_mode open mode must be 'r' or 'w'");
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
       break;
@@ -59,7 +59,7 @@ yGLTEX__file_open    (cchar *a_name, cchar a_mode)
    s_mode = a_mode;
    DEBUG_YGLTEX    yLOG_point   ("s_file"    , s_file);
    --rce;  if (s_file == NULL) {
-      DEBUG_YGLTEX    yLOG_warn    ("s_file"   , "texture file could not be openned");
+      DEBUG_YGLTEX    yLOG_warn    ("s_file texture file could not be openned");
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
    }
@@ -88,7 +88,7 @@ yGLTEX__file_close   (void)
       png_destroy_write_struct (&s_png, &s_info);
       break;
    default  :
-      DEBUG_YGLTEX    yLOG_warn    ("a_mode"   , "mode must be 'r' or 'w'");
+      DEBUG_YGLTEX    yLOG_warn    ("a_mode mode must be 'r' or 'w'");
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
       break;
@@ -133,7 +133,7 @@ yGLTEX__file_alloc   (void)
    s_image = (unsigned char*) malloc (sizeof (png_byte) * s_rowbyte * s_height);
    DEBUG_YGLTEX    yLOG_point   ("s_image"   , s_image);
    --rce;  if (s_image == NULL) {
-      DEBUG_YGLTEX    yLOG_warn    ("s_image"  , "could not allocate memory");
+      DEBUG_YGLTEX    yLOG_warn    ("s_image could not allocate memory");
       yGLTEX__file_close ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
@@ -142,7 +142,7 @@ yGLTEX__file_alloc   (void)
    s_rows = (png_bytepp)  malloc (sizeof (png_bytep) * s_height);
    DEBUG_YGLTEX    yLOG_point   ("s_rows"    , s_rows);
    --rce;  if (s_rows == NULL) {
-      DEBUG_YGLTEX    yLOG_warn    ("s_image"  , "could not allocate memory");
+      DEBUG_YGLTEX    yLOG_warn    ("s_image could not allocate memory");
       yGLTEX__file_close ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;

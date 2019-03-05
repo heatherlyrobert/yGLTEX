@@ -16,7 +16,7 @@ yGLTEX__save_header  (void)
    s_png = png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
    DEBUG_YGLTEX    yLOG_point   ("s_png"     , s_png);
    --rce;  if (s_png == NULL) {
-      DEBUG_YGLTEX    yLOG_warn    ("s_png"    , "can not get a write structure");
+      DEBUG_YGLTEX    yLOG_warn    ("s_png can not get a write structure");
       yGLTEX__file_close  ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
@@ -26,7 +26,7 @@ yGLTEX__save_header  (void)
    s_info = png_create_info_struct (s_png);
    DEBUG_YGLTEX    yLOG_point   ("s_info"    , s_info);
    --rce;  if (s_info == NULL) {
-      DEBUG_YGLTEX    yLOG_warn    ("s_info"   , "can not get a info structure");
+      DEBUG_YGLTEX    yLOG_warn    ("s_info can not get a info structure");
       yGLTEX__file_close  ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
@@ -36,7 +36,7 @@ yGLTEX__save_header  (void)
    rc = setjmp (png_jmpbuf (s_png));
    DEBUG_YGLTEX    yLOG_value   ("setjmp"    , rc);
    -rce;  if (rc <  0) {
-      DEBUG_YGLTEX    yLOG_warn    ("setjmp"   , "can not setjmp for header write");
+      DEBUG_YGLTEX    yLOG_warn    ("setjmp can not setjmp for header write");
       yGLTEX__file_close ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
@@ -67,7 +67,7 @@ yGLTEX__save_attrib  (cint a_width, cint a_height)
    rc = setjmp (png_jmpbuf (s_png));
    DEBUG_YGLTEX    yLOG_value   ("setjmp"    , rc);
    -rce;  if (rc <  0) {
-      DEBUG_YGLTEX    yLOG_warn    ("setjmp"   , "can not setjmp for attrib write");
+      DEBUG_YGLTEX    yLOG_warn    ("setjmp can not setjmp for attrib write");
       yGLTEX__file_close ();
       DEBUG_YGLTEX    yLOG_exit    (__FUNCTION__);
       return  rce;
