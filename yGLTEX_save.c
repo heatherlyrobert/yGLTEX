@@ -104,6 +104,9 @@ yGLTEX__save_image   (cchar a_source)
       glCopyTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, 0, 0, s_width, s_height, 0);
       glGetTexImage    (GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid *) s_image);
       break;
+   case 'c' :
+      DEBUG_YGLTEX    yLOG_note    ("edited in place");
+      break;
    default  : 
       DEBUG_YGLTEX    yLOG_note    ("unknown type");
       DEBUG_YGLTEX    yLOG_exitr   (__FUNCTION__, rce);
